@@ -1,0 +1,52 @@
+<%   def prompt_to_remote(name, text, param, url, html_options = {})
+       html_options[:onclick] = "promptToRemoteWithOptions('#{text}', '#{param}', '#{url_for(url)}'); return false;"
+
+       link_to name, url, html_options
+     end %>
+<% if @can[:edit]%>
+    <%
+
+      relations_html = []
+
+      IssueRelation::TYPES.sort_by {|r| r[1][:order]}.each do |type|
+        relation = type[0]
+        options = type[1]
+        url =
+            if @issues.length <= 1
+              {
+                  :controller => 'multiple_issue_relations',
+                  :action => 'new',
+                  format: :js,
+                  :issue_ids => [@issues.first.id],
+                  :relation => {:relation_type => relation}
+              }
+            else
+              {
+                  :controller => 'multiple_issue_relations',
+                  :action => 'new',
+                  format: :js,
+                  :issue_ids => @issues.collect(&:id),
+                  :relation => {:relation_type => relation}
+              }
+            end
+
+        relations_html << content_tag(
+            :li, prompt_to_remote(
+            l(options[:name]),
+            l(:field_issue_to),
+            'relation[issue_to_id]',
+            url)
+        ).html_safe
+
+      end
+    %>
+
+    <li class="folder" id="relations">
+      <a href="#" class="submenu"><%=l(:label_related_issues) %></a>
+      <ul>
+        <% relations_html.each do |relation_html| -%>
+           <%= relation_html %>
+        <% end -%>
+      </ul>
+    </li>
+<% end %>

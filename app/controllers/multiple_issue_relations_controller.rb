@@ -1,6 +1,6 @@
 class MultipleIssueRelationsController < ApplicationController
   unloadable
-  before_filter :find_project, :authorize
+  # before_filter :find_project, :authorize
 
   def new
     if params[:relation] && params[:issue_ids]
@@ -14,7 +14,7 @@ class MultipleIssueRelationsController < ApplicationController
           @relation.issue_to = Issue.visible.find_by_id(params[:relation][:issue_to_id])
         end
 
-        if request.post? && !@relation.save
+        if request.get? && !@relation.save
           @issue_failed << @relation.issue_from_id
         end
       end
@@ -32,9 +32,7 @@ class MultipleIssueRelationsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to redirect_url }
       format.js do
-        render :update do |page|
-          page.redirect_to(redirect_url)
-        end
+       render :js => 'location.reload()'
       end
     end
   end

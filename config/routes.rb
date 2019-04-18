@@ -1,0 +1,1 @@
+get "/multiple_issue_relations/new", to: "multiple_issue_relations#new"

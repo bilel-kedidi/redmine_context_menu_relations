@@ -1,9 +1,9 @@
 require 'redmine'
 
 # Patches to the Redmine core.
-require 'dispatcher'
+# require 'dispatcher'
 
-Dispatcher.to_prepare :redmine_context_menu_relations do
+# Dispatcher.to_prepare :redmine_context_menu_relations do
   require_dependency 'query'
   require_dependency 'queries_helper'
   
@@ -13,7 +13,7 @@ Dispatcher.to_prepare :redmine_context_menu_relations do
   unless QueriesHelper.included_modules.include? ContextMenuRelations::Patches::QueryHelperPatch
     QueriesHelper.send(:include, ContextMenuRelations::Patches::QueryHelperPatch)
   end
-end
+# end
 
 require 'context_menu_relations/hooks/issue_hooks'
 
